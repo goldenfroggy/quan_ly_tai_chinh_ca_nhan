@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý tài chính cá nhân</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-logo">💰</span>
+      <div>
+        <div class="brand-name">Quản lý tài chính cá nhân</div>
+        <div class="brand-sub" id="current-month"></div>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-view="dashboard">Dashboard</button>
+      <button class="tab" data-view="transactions">Giao dịch</button>
+      <button class="tab" data-view="budgets">Hạn mức</button>
+      <button class="tab" data-view="categories">Danh mục</button>
+      <button class="tab" data-view="alerts">
+        Cảnh báo <span class="badge hidden" id="alert-badge">0</span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="container" id="view-dashboard" data-view="dashboard">
+    <div class="grid-cards">
+      <div class="card stat-card income">
+        <div class="stat-label">Thu nhập tháng</div>
+        <div class="stat-value" id="dash-income">0</div>
+      </div>
+      <div class="card stat-card expense">
+        <div class="stat-label">Chi tiêu tháng</div>
+        <div class="stat-value" id="dash-expense">0</div>
+      </div>
+      <div class="card stat-card balance">
+        <div class="stat-label">Số dư</div>
+        <div class="stat-value" id="dash-balance">0</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <section class="card">
+        <div class="card-head">
+          <h3>Hạn mức tháng này</h3>
+          <button class="btn btn-small" data-action="goto-budgets">Quản lý</button>
+        </div>
+        <div id="dash-budgets" class="budget-list"></div>
+      </section>
+      <section class="card">
+        <div class="card-head">
+          <h3>Giao dịch gần đây</h3>
+          <button class="btn btn-small" data-action="goto-transactions">Xem tất cả</button>
+        </div>
+        <div id="dash-recent" class="txn-list"></div>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="card-head">
+        <h3>Cảnh báo gần đây</h3>
+        <button class="btn btn-small" data-action="goto-alerts">Xem tất cả</button>
+      </div>
+      <div id="dash-alerts" class="alert-list"></div>
+    </section>
+  </main>
+
+  <main class="container hidden" id="view-transactions" data-view="transactions">
+    <div class="page-head">
+      <h2>Giao dịch</h2>
+      <button class="btn btn-primary" data-action="txn-create">+ Thêm giao dịch</button>
+    </div>
+    <div class="card">
+      <div class="filter-bar">
+        <select id="f-type">
+          <option value="">Tất cả loại</option>
+          <option value="expense">Chi tiêu</option>
+          <option value="income">Thu nhập</option>
+        </select>
+        <select id="f-category"><option value="">Tất cả danh mục</option></select>
+        <input type="date" id="f-date-from" />
+        <input type="date" id="f-date-to" />
+        <button class="btn" data-action="txn-filter">Lọc</button>
+        <button class="btn btn-ghost" data-action="txn-reset">Xóa bộ lọc</button>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Ngày</th><th>Danh mục</th><th>Nội dung</th><th class="num">Số tiền</th><th class="act"></th>
+          </tr>
+        </thead>
+        <tbody id="txn-tbody"></tbody>
+      </table>
+      <div class="pagination" id="txn-pagination"></div>
+    </div>
+  </main>
+
+  <main class="container hidden" id="view-budgets" data-view="budgets">
+    <div class="page-head">
+      <h2>Hạn mức chi tiêu</h2>
+      <button class="btn btn-primary" data-action="budget-create">+ Thêm hạn mức</button>
+    </div>
+    <div id="budget-grid" class="budget-grid"></div>
+  </main>
+
+  <main class="container hidden" id="view-categories" data-view="categories">
+    <div class="page-head">
+      <h2>Danh mục</h2>
+      <button class="btn btn-primary" data-action="category-create">+ Thêm danh mục</button>
+    </div>
+    <div class="two-col">
+      <section class="card">
+        <h3>Chi tiêu</h3>
+        <div id="cat-expense" class="cat-list"></div>
+      </section>
+      <section class="card">
+        <h3>Thu nhập</h3>
+        <div id="cat-income" class="cat-list"></div>
+      </section>
+    </div>
+  </main>
+
+  <main class="container hidden" id="view-alerts" data-view="alerts">
+    <div class="page-head">
+      <h2>Cảnh báo</h2>
+      <div class="btn-group">
+        <button class="btn" data-action="alert-check">Kiểm tra ngay</button>
+        <button class="btn" data-action="alert-read-all">Đánh dấu đã đọc</button>
+      </div>
+    </div>
+    <div class="card">
+      <div id="alert-list" class="alert-list"></div>
+    </div>
+  </main>
+
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal-head">
+        <h3 id="modal-title"></h3>
+        <button class="modal-close" data-action="modal-close">&times;</button>
+      </div>
+      <div id="modal-body"></div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" data-action="modal-close">Hủy</button>
+        <button class="btn btn-primary" data-action="modal-save">Lưu</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toasts"></div>
+
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
