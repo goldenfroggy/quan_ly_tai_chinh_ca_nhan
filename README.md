@@ -18,6 +18,24 @@ Phần mềm quản lý tài chính cá nhân với đầy đủ chức năng qu
 
 ## Cài đặt
 
+### Cách 1 — Nhanh nhất: chạy bằng Docker (không cần cài Python)
+
+Yêu cầu: [Docker Desktop](https://www.docker.com/products/docker-desktop/) (hoặc Docker Engine).
+
+```bash
+git clone https://github.com/goldenfroggy/quan_ly_tai_chinh_ca_nhan.git
+cd quan_ly_tai_chinh_ca_nhan
+docker compose up -d
+```
+
+- Giao diện web: http://localhost:8000
+- Swagger docs: http://localhost:8000/docs
+- Health check: http://localhost:8000/health
+
+Docker Compose sẽ tự dựng PostgreSQL + ứng dụng, tạo danh mục mặc định khi khởi động. Dừng app: `docker compose down` (thêm `-v` để xóa luôn dữ liệu).
+
+### Cách 2 — Chạy thủ công (cần Python 3.13+)
+
 ### 1. Khởi động PostgreSQL
 
 ```bash

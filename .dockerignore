@@ -1,0 +1,11 @@
+.git
+.gitignore
+.venv
+__pycache__
+*.pyc
+.env
+*.db
+.dockerignore
+Dockerfile
+README.md
+scripts/seed_demo.py
